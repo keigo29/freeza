@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -13,6 +12,7 @@ use App\Models\Event;
 
 class User extends Authenticatable
 {
+    // 使用するトレイトの宣言
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
@@ -28,7 +28,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role'
+        'g2fa_key',
+        'role' // ロール情報も扱うことができる
     ];
 
     /**
@@ -61,9 +62,10 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+    // ユーザーが予約したイベントを取得する関連メソッド
     public function events()
     {
         return $this->belongsToMany(Event::class, 'reservations')
-        ->withPivot('id', 'number_of_people', 'canceled_date');
+            ->withPivot('id', 'number_of_people', 'canceled_date');
     } 
 }

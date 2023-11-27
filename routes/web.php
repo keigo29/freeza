@@ -43,6 +43,7 @@ Route::middleware('can:user-higher')
     Route::post('/mypage/{id}', [MyPageController::class, 'cancel'])->name('mypage.cancel');    
     // Route::get('/{id}', [ReservationController::class, 'detail'])->name('events.detail');
     Route::post('/{id}', [ReservationController::class, 'reserve'])->name('events.reserve');
+    Route::view('/auth/two-factor-authentication', 'auth.two-factor-authentication')->name('auth-two-factor-authentication');
 });
 
 Route::get('/{id}', [ReservationController::class, 'detail'])->name('events.detail');
@@ -54,4 +55,3 @@ Route::controller(LivewireTestController::class)
 });
 
 Route::get('alpine-test/index', [AlpineTestController::class, 'index']);
-

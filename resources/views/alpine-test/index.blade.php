@@ -23,6 +23,7 @@
         <div class="min-h-screen bg-gray-100">
 
             <!-- Page Heading -->
+            <!-- ページのヘッダー部分 -->
             @if (isset($header))
                 <header class="bg-white shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -32,14 +33,15 @@
             @endif
 
             <!-- Page Content -->
+            <!-- ページのコンテンツ -->
             <main>
                alpineテスト
+               <!-- Alpine.jsの使用例 -->
                <div x-data="{ open:true }">
                   <div x-show="open">openがtrue</div>
                   <div x-show="!open">openがfalse</div>
                   <button class="px-4 py-2 bg-blue-400 text-white" x-on:click="open = !open">ボタン</button>
                 </div>
-
               </main>
         </div>
 

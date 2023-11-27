@@ -23,6 +23,8 @@
   <div class="py-1 px-2 h-8 border border-gray-200">19:30</div>
   <div class="py-1 px-2 h-8 border border-gray-200">20:00</div>
   <div class="py-1 px-2 h-8 border border-gray-200">21:00</div>
+  <div class="py-1 px-2 h-8 border border-gray-200">21:30</div>
   <div class="py-1 px-2 h-8 border border-gray-200">22:00</div>
+  <div class="py-1 px-2 h-8 border border-gray-200">22:30</div>
   <div class="py-1 px-2 h-8 border border-gray-200">23:00</div>
 </div>
