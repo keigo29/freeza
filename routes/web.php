@@ -22,7 +22,14 @@ use App\Http\Controllers\MyPageController;
 Route::get('/', function () {
     return view('calendar');
 });
-
+Route::middleware('auth')->group(function () {
+    Route::get('/home', function () {
+        return view('home');
+    });
+    Route::get('/profile', function() {
+        return view('profile.index');
+    })->name('profile');
+});
 
 // Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 //     return view('dashboard');
