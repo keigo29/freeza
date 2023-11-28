@@ -13,7 +13,7 @@
           <div class="w-32">
             <div class="py-1 px-2 border border-gray-200 text-center">{{ $currentWeek[$i]['day'] }}</div>
             <div class="py-1 px-2 border border-gray-200 text-center">{{ $currentWeek[$i]['dayOfWeek'] }}</div>
-            @for($j = 0; $j < 12; $j++)
+            @for($j = 0; $j < 21; $j++)
                 @if($events->isNotEmpty())
                   @if(!is_null($events->firstWhere('start_date', 
                   $currentWeek[$i]['checkDay'] . " " . \Constant::EVENT_TIME[$j] )))

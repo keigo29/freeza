@@ -1,7 +1,7 @@
 <div>
   <div class="py-1 px-2 border border-gray-200 text-center">日</div>
   <div class="py-1 px-2 border border-gray-200 text-center">曜日</div>
-  <!-- <div class="py-1 px-2 h-8 border border-gray-200">10:00</div>
+  <div class="py-1 px-2 h-8 border border-gray-200">10:00</div>
   <div class="py-1 px-2 h-8 border border-gray-200">10:30</div>
   <div class="py-1 px-2 h-8 border border-gray-200">11:00</div>
   <div class="py-1 px-2 h-8 border border-gray-200">11:30</div>
@@ -14,7 +14,7 @@
   <div class="py-1 px-2 h-8 border border-gray-200">15:00</div>
   <div class="py-1 px-2 h-8 border border-gray-200">15:30</div>
   <div class="py-1 px-2 h-8 border border-gray-200">16:00</div>
-  <div class="py-1 px-2 h-8 border border-gray-200">16:30</div> -->
+  <div class="py-1 px-2 h-8 border border-gray-200">16:30</div>
   <div class="py-1 px-2 h-8 border border-gray-200">17:00</div>
   <div class="py-1 px-2 h-8 border border-gray-200">17:30</div>
   <div class="py-1 px-2 h-8 border border-gray-200">18:00</div>
@@ -22,9 +22,5 @@
   <div class="py-1 px-2 h-8 border border-gray-200">19:00</div>
   <div class="py-1 px-2 h-8 border border-gray-200">19:30</div>
   <div class="py-1 px-2 h-8 border border-gray-200">20:00</div>
-  <div class="py-1 px-2 h-8 border border-gray-200">21:00</div>
-  <div class="py-1 px-2 h-8 border border-gray-200">21:30</div>
-  <div class="py-1 px-2 h-8 border border-gray-200">22:00</div>
-  <div class="py-1 px-2 h-8 border border-gray-200">22:30</div>
-  <div class="py-1 px-2 h-8 border border-gray-200">23:00</div>
+ 
 </div>

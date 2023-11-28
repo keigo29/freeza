@@ -52,11 +52,29 @@ class EventController extends Controller
     // 新しいイベントを保存するメソッド
     public function store(StoreEventRequest $request)
     {
-        // リクエストからイベント情報を取得し、新しいイベントを作成して保存
-        // ...
+        $check = EventService::checkEventDuplication(
+            $request['event_date'],$request['start_time'],$request['end_time']);
 
-        // フラッシュメッセージを表示し、イベント一覧にリダイレクト
-        // ...
+        if($check){
+            session()->flash('status', 'この時間帯は既に他の予約が存在します。');
+            return view('manager.events.create');
+        }
+
+        $startDate = EventService::joinDateAndTime($request['event_date'],$request['start_time']);
+        $endDate = EventService::joinDateAndTime($request['event_date'],$request['end_time']);         
+        
+        Event::create([
+            'name' => $request['event_name'],
+            'information' => $request['information'],
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'max_people' => $request['max_people'],
+            'is_visible' => $request['is_visible']
+        ]);
+
+        session()->flash('status', '登録okです');
+
+        return to_route('events.index');
 
         return to_route('events.index');
     }
@@ -64,17 +82,45 @@ class EventController extends Controller
     // 特定のイベントの詳細を表示するメソッド
     public function show(Event $event)
     {
-        // イベントや関連するユーザーの情報を取得
-        // ...
+        $event = Event::findOrFail($event->id);
+        $users = $event->users;
 
-        return view('manager.events.show', compact('event', 'users', 'reservations', 'eventDate', 'startTime', 'endTime'));
+        $reservations = [];
+
+        foreach($users as $user)
+        {
+            $reservedInfo = [
+                'name' => $user->name,
+                'number_of_people' => $user->pivot->number_of_people,
+                'canceled_date' =>  $user->pivot->canceled_date
+            ];
+            array_push($reservations, $reservedInfo);
+        }
+        // dd($reservations);
+        // dd($event, $users);
+
+        $eventDate = $event->eventDate;
+        $startTime = $event->startTime;
+        $endTime = $event->endTime;
+
+        // dd($eventDate, $startTime, $endTime);
+
+        return view('manager.events.show',
+        compact('event', 'users', 'reservations',
+        'eventDate', 'startTime', 'endTime'));
     }
 
     // イベントの編集フォームを表示するメソッド
     public function edit(Event $event)
     {
-        // 編集対象のイベントを取得し、編集可能かチェック
-        // ...
+        $event = Event::findOrFail($event->id);
+        $eventDate = $event->editEventDate;
+        $startTime = $event->startTime;
+        $endTime = $event->endTime;
+
+        return view('manager.events.edit',
+        compact('event', 'eventDate', 'startTime', 'endTime'));
+    
 
         return view('manager.events.edit', compact('event', 'eventDate', 'startTime', 'endTime'));
     }
@@ -82,28 +128,59 @@ class EventController extends Controller
     // イベントの更新を行うメソッド
     public function update(UpdateEventRequest $request, Event $event)
     {
-        // リクエストから情報を取得し、イベントを更新して保存
-        // ...
+        $check = EventService::countEventDuplication(
+            $request['event_date'],$request['start_time'],$request['end_time']);
 
-        // フラッシュメッセージを表示し、イベント一覧にリダイレクト
-        // ...
-
-        return to_route('events.index');
+        if($check > 1){
+            $event = Event::findOrFail($event->id);
+            $eventDate = $event->editEventDate;
+            $startTime = $event->startTime;
+            $endTime = $event->endTime;
+            session()->flash('status', 'この時間帯は既に他の予約が存在します。');
+            return view('manager.events.edit', 
+            compact('event', 'eventDate', 'startTime', 'endTime'));
     }
+    $startDate = EventService::joinDateAndTime($request['event_date'],$request['start_time']);
+    $endDate = EventService::joinDateAndTime($request['event_date'],$request['end_time']);         
+    
+    $event = Event::findOrFail($event->id);
+    $event->name = $request['event_name'];
+    $event->information = $request['information'];
+    $event->start_date =  $startDate;
+    $event->end_date = $endDate;
+    $event->max_people = $request['max_people'];
+    $event->is_visible = $request['is_visible'];
+    $event->save();
+    
+    session()->flash('status', '更新しました。');
+
+    return to_route('events.index');
+
+}
 
     // 過去のイベント一覧を表示するメソッド
     public function past()
     {
-        // 過去のイベントを取得
-        // ...
+        $today = Carbon::today();
+
+        $reservedPeople = DB::table('reservations')
+        ->select('event_id', DB::raw('sum(number_of_people) as number_of_people'))
+        ->whereNull('canceled_date')
+        ->groupBy('event_id');
+
+        $events = DB::table('events')
+        ->leftJoinSub($reservedPeople, 'reservedPeople', function($join){
+            $join->on('events.id', '=', 'reservedPeople.event_id');
+            })
+        ->whereDate('start_date', '<', $today)
+        ->orderBy('start_date', 'desc')
+        ->paginate(10);
 
         return view('manager.events.past', compact('events'));
     }
 
-    // イベントの削除を行うメソッド
     public function destroy(Event $event)
     {
-        // 削除処理を実装
-        // ...
+        //
     }
 }
