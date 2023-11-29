@@ -10,10 +10,12 @@
       <div class="flex mx-auto">
           <x-calendar-time />
           @for($i = 0; $i < 7; $i++)
+         
           <div class="w-32">
             <div class="py-1 px-2 border border-gray-200 text-center">{{ $currentWeek[$i]['day'] }}</div>
             <div class="py-1 px-2 border border-gray-200 text-center">{{ $currentWeek[$i]['dayOfWeek'] }}</div>
             @for($j = 0; $j < 21; $j++)
+            
                 @if($events->isNotEmpty())
                   @if(!is_null($events->firstWhere('start_date', 
                   $currentWeek[$i]['checkDay'] . " " . \Constant::EVENT_TIME[$j] )))
@@ -25,9 +27,9 @@
                     @endphp
                     <a href="{{ route('events.detail', ['id' => $eventId ])}}">
                     <div class="py-1 px-2 h-8 border border-gray-200 text-xs bg-blue-100">
-                        {{ $eventName }}
+                        <!-- {{ $eventName }} -->
                     </div>
-                    
+                    </a>
                     @if( $eventPeriod > 0 )
                       @for($k = 0; $k < $eventPeriod ; $k++)
                       <div class="py-1 px-2 h-8 border border-gray-200 bg-blue-100"></div>
@@ -41,7 +43,6 @@
                     <div class="py-1 px-2 h-8 border border-gray-200"></div>
                 @endif
             @endfor
-            </a>
           </div>
           @endfor          
       </div>

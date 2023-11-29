@@ -1,6 +1,5 @@
 <?php
 
-// 必要なクラスやトレイトをインポート
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEventRequest;
@@ -10,46 +9,46 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Services\EventService;
 
-// Controllerクラスを継承したEventControllerクラス
 class EventController extends Controller
 {
-    // イベントの一覧を表示するメソッド
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        // 現在の日付を取得
         $today = Carbon::today();
 
-        // 予約された人数を取得するクエリ
         $reservedPeople = DB::table('reservations')
-            // event_id列と、number_of_people列の合計値を取得するためにDB::raw()
-            ->select('event_id', DB::raw('sum(number_of_people) as number_of_people'))
-            // canceled_dateがNULLである条件の予約データを取得しています。
-            ->whereNull('canceled_date')
-            // event_idでグループ化して、同じevent_idを持つ予約データをまとめます。
-            ->groupBy('event_id');
+        ->select('event_id', DB::raw('sum(number_of_people) as number_of_people'))
+        ->whereNull('canceled_date')
+        ->groupBy('event_id');
+        // dd($reservedPeople);
 
-        // イベント一覧を取得するクエリ
         $events = DB::table('events')
-            // Laravelのクエリビルダでサブクエリとの結合
-            ->leftJoinSub($reservedPeople, 'reservedPeople', function($join){
-                // これにより、events テーブルの id カラムと $reservedPeople サブクエリの event_id カラムを照合し、各イベントの情報に予約された人数の合計を持たせることができます。
-                $join->on('events.id', '=', 'reservedPeople.event_id');
+        ->leftJoinSub($reservedPeople, 'reservedPeople', function($join){
+            $join->on('events.id', '=', 'reservedPeople.event_id');
             })
-            
-            ->whereDate('start_date', '>=', $today)
-            ->orderBy('start_date', 'asc')
-            ->paginate(10);
+        ->whereDate('start_date', '>=', $today)
+        ->orderBy('start_date', 'asc')
+        ->paginate(10);
+        
 
-        return view('manager.events.index', compact('events'));
+        return view('manager.events.index', 
+        compact('events'));
     }
 
-    // 新しいイベントの作成フォームを表示するメソッド
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create()
     {
         return view('manager.events.create');
     }
 
-    // 新しいイベントを保存するメソッド
     public function store(StoreEventRequest $request)
     {
         $check = EventService::checkEventDuplication(
@@ -76,10 +75,8 @@ class EventController extends Controller
 
         return to_route('events.index');
 
-        return to_route('events.index');
     }
 
-    // 特定のイベントの詳細を表示するメソッド
     public function show(Event $event)
     {
         $event = Event::findOrFail($event->id);
@@ -91,6 +88,7 @@ class EventController extends Controller
         {
             $reservedInfo = [
                 'name' => $user->name,
+                'email' => $user->email,
                 'number_of_people' => $user->pivot->number_of_people,
                 'canceled_date' =>  $user->pivot->canceled_date
             ];
@@ -110,7 +108,7 @@ class EventController extends Controller
         'eventDate', 'startTime', 'endTime'));
     }
 
-    // イベントの編集フォームを表示するメソッド
+    
     public function edit(Event $event)
     {
         $event = Event::findOrFail($event->id);
@@ -120,12 +118,8 @@ class EventController extends Controller
 
         return view('manager.events.edit',
         compact('event', 'eventDate', 'startTime', 'endTime'));
-    
-
-        return view('manager.events.edit', compact('event', 'eventDate', 'startTime', 'endTime'));
     }
 
-    // イベントの更新を行うメソッド
     public function update(UpdateEventRequest $request, Event $event)
     {
         $check = EventService::countEventDuplication(
@@ -139,26 +133,25 @@ class EventController extends Controller
             session()->flash('status', 'この時間帯は既に他の予約が存在します。');
             return view('manager.events.edit', 
             compact('event', 'eventDate', 'startTime', 'endTime'));
+        }
+
+        $startDate = EventService::joinDateAndTime($request['event_date'],$request['start_time']);
+        $endDate = EventService::joinDateAndTime($request['event_date'],$request['end_time']);         
+        
+        $event = Event::findOrFail($event->id);
+        $event->name = $request['event_name'];
+        $event->information = $request['information'];
+        $event->start_date =  $startDate;
+        $event->end_date = $endDate;
+        $event->max_people = $request['max_people'];
+        $event->is_visible = $request['is_visible'];
+        $event->save();
+        
+        session()->flash('status', '更新しました。');
+
+        return to_route('events.index');
     }
-    $startDate = EventService::joinDateAndTime($request['event_date'],$request['start_time']);
-    $endDate = EventService::joinDateAndTime($request['event_date'],$request['end_time']);         
-    
-    $event = Event::findOrFail($event->id);
-    $event->name = $request['event_name'];
-    $event->information = $request['information'];
-    $event->start_date =  $startDate;
-    $event->end_date = $endDate;
-    $event->max_people = $request['max_people'];
-    $event->is_visible = $request['is_visible'];
-    $event->save();
-    
-    session()->flash('status', '更新しました。');
 
-    return to_route('events.index');
-
-}
-
-    // 過去のイベント一覧を表示するメソッド
     public function past()
     {
         $today = Carbon::today();

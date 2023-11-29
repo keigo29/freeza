@@ -77,18 +77,31 @@
                     <thead>
                       <tr>
                         <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">予約者名</th>
+                        <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">メールアドレス</th>
                         <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">予約人数</th>
+                        <!-- <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">備考</th> -->
                       </tr>
                     </thead>
                     <tbody>
+                    <div>
+    <!-- @dump($reservations) -->
+</div>
                     @foreach ($reservations as $reservation )
                     @if(is_null($reservation['canceled_date']))
                     <tr>
+                        
                         <td class="px-4 py-3">{{ $reservation['name']}}</td>
+                        <td class="px-4 py-3">{{ $reservation['email']}}</td>
                         <td class="px-4 py-3">{{ $reservation['number_of_people']}}</td>
+                        <!-- <td class="px-4 py-3">{{ isset($reservation['remarks']) ? $reservation['remarks'] : '備考がありません' }}</td> -->
+                       
+
                     </tr>
                     @endif
                     @endforeach
+                    <div>
+                    
+</div>
                     </tbody>
                 </table>
               @endif

@@ -20,7 +20,7 @@
                     </x-jet-nav-link>
                     @can('manager-higher')
                     <x-jet-nav-link href="{{ route('events.index') }}" :active="request()->routeIs('events.index')">
-                        シェフバーテンダー出勤管理
+                        予約可能日管理
                     </x-jet-nav-link>
                     @endcan
                 </div>
@@ -101,11 +101,11 @@
                         <x-slot name="content">
                             <!-- Account Management -->
                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __('Manage Account') }}
+                                {{ __('アカウント') }}
                             </div>
 
                             <x-jet-dropdown-link href="{{ route('profile.show') }}">
-                                {{ __('Profile') }}
+                                {{ __('プロフィール') }}
                             </x-jet-dropdown-link>
 
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
@@ -123,7 +123,7 @@
                                 <x-jet-dropdown-link href="{{ route('logout') }}"
                                          onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                    {{ __('Log Out') }}
+                                    {{ __('ログアウト') }}
                                 </x-jet-dropdown-link>
                             </form>
                         </x-slot>
@@ -154,7 +154,7 @@
             </x-jet-responsive-nav-link>
             @can('manager-higher')
             <x-jet-responsive-nav-link href="{{ route('events.index') }}" :active="request()->routeIs('events.index')">
-                シェフバーテンダー出勤管理
+                予約可能日管理
             </x-jet-responsive-nav-link>
             @endcan
         </div>

@@ -1,15 +1,16 @@
 <x-jet-action-section>
-    <x-slot name="title">
-        {{ __('Browser Sessions') }}
-    </x-slot>
+<x-slot name="title">
+    {{ __('ブラウザセッション') }}
+</x-slot>
 
-    <x-slot name="description">
-        {{ __('Manage and log out your active sessions on other browsers and devices.') }}
-    </x-slot>
+<x-slot name="description">
+    {{ __('他のブラウザやデバイスでのアクティブなセッションを管理し、ログアウトします。') }}
+</x-slot>
+
 
     <x-slot name="content">
         <div class="max-w-xl text-sm text-gray-600">
-            {{ __('If necessary, you may log out of all of your other browser sessions across all of your devices. Some of your recent sessions are listed below; however, this list may not be exhaustive. If you feel your account has been compromised, you should also update your password.') }}
+            {{ __('アカウント不正利用の可能性がある場合は全てのデバイスおよびブラウザからログアウトすることができます。アカウントが不正利用された可能性のある場合はパスワードを更新することをおすすめします。') }}
         </div>
 
         @if (count($this->sessions) > 0)
@@ -39,9 +40,9 @@
                                     {{ $session->ip_address }},
 
                                     @if ($session->is_current_device)
-                                        <span class="text-green-500 font-semibold">{{ __('This device') }}</span>
+                                        <span class="text-green-500 font-semibold">{{ __('このデバイス') }}</span>
                                     @else
-                                        {{ __('Last active') }} {{ $session->last_active }}
+                                        {{ __('直近のログイン') }} {{ $session->last_active }}
                                     @endif
                                 </div>
                             </div>
@@ -53,7 +54,7 @@
 
         <div class="flex items-center mt-5">
             <x-jet-button wire:click="confirmLogout" wire:loading.attr="disabled">
-                {{ __('Log Out Other Browser Sessions') }}
+                {{ __('他のブラウザセッションからログアウト') }}
             </x-jet-button>
 
             <x-jet-action-message class="ml-3" on="loggedOut">
@@ -64,11 +65,11 @@
         <!-- Log Out Other Devices Confirmation Modal -->
         <x-jet-dialog-modal wire:model="confirmingLogout">
             <x-slot name="title">
-                {{ __('Log Out Other Browser Sessions') }}
+                {{ __('他のブラウザセッションからログアウト') }}
             </x-slot>
 
             <x-slot name="content">
-                {{ __('Please enter your password to confirm you would like to log out of your other browser sessions across all of your devices.') }}
+                {{ __('他のブラウザセッションをすべてのデバイスでログアウトするためには、パスワードを入力して確認してください。') }}
 
                 <div class="mt-4" x-data="{}" x-on:confirming-logout-other-browser-sessions.window="setTimeout(() => $refs.password.focus(), 250)">
                     <x-jet-input type="password" class="mt-1 block w-3/4"
@@ -83,13 +84,13 @@
 
             <x-slot name="footer">
                 <x-jet-secondary-button wire:click="$toggle('confirmingLogout')" wire:loading.attr="disabled">
-                    {{ __('Cancel') }}
+                    {{ __('キャンセル') }}
                 </x-jet-secondary-button>
 
                 <x-jet-button class="ml-3"
                             wire:click="logoutOtherBrowserSessions"
                             wire:loading.attr="disabled">
-                    {{ __('Log Out Other Browser Sessions') }}
+                    {{ __('他のブラウザセッションからログアウト') }}
                 </x-jet-button>
             </x-slot>
         </x-jet-dialog-modal>

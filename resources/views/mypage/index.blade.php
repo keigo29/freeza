@@ -73,8 +73,9 @@
                     @foreach($pastEvents as $event)
                     <tr>
                       <td class="text-blue-500 px-4 py-3"><a href="{{ route('mypage.show', [ 'id' => $event['id'] ])}}">{{ $event['name'] }}</a></td>
-                      <td class="px-4 py-3">{{ $event['start_date'] }}</td>
-                      <td class="px-4 py-3">{{ $event['end_date'] }}</td>
+                      <td class="px-4 py-3">{{ \Carbon\Carbon::parse($event['start_date'])->format('n月j日 H時i分') }}</td>
+<td class="px-4 py-3">{{ \Carbon\Carbon::parse($event['end_date'])->format('n月j日 H時i分') }}</td>
+
                       <td class="px-4 py-3">
                           {{ $event['number_of_people'] }}
                       </td>

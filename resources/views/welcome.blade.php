@@ -34,12 +34,12 @@
                     <!-- ユーザーが認証されていない場合 -->
                     @else
                         <!-- ログインページへのリンク -->
-                        <a href="{{ route('login') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Log in</a>
+                        <a href="{{ route('login') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">ログイン</a>
 
                         <!-- 登録ルートが存在する場合 -->
                         @if (Route::has('register'))
                             <!-- 登録ページへのリンク -->
-                            <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 dark:text-gray-500 underline">Register</a>
+                            <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 dark:text-gray-500 underline">新規登録</a>
                         @endif
                     <!-- 認証終了 -->
                     @endauth

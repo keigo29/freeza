@@ -63,7 +63,11 @@
                         @endif
                     </div>
                     @if($isReserved === null)
-                        <input type="hidden" name="id" value="{{ $event->id }}">  
+                        <input type="hidden" name="id" value="{{ $event->id }}"> 
+                        <div class="mt-4">
+        <!-- <x-jet-label for="remarks" value="備考" />
+        <textarea name="remarks" id="remarks" rows=" 1" class="block w-full mt-1 rounded-md border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea> -->
+    </div> 
                         @if($reservablePeople > 0 )
                         <x-jet-button class="ml-4">
                             予約する

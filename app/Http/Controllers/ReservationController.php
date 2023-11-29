@@ -43,40 +43,51 @@ class ReservationController extends Controller
             ->where('canceled_date', '=', null)
             ->latest()
             ->first();
-
+          
+             // 予約の備考を取得
+    $remarks = Reservation::where('user_id', '=', Auth::id())
+    ->where('event_id', '=', $id)
+    ->where('canceled_date', '=', null)
+    ->latest()
+    ->value('remarks');
         // イベント詳細ページを表示する際、データをコンパクトにして渡す
-        return view('event-detail', compact('event', 'reservablePeople', 'isReserved'));
+        return view('event-detail', compact('event', 'reservablePeople', 'isReserved', 'remarks'));
     }
-
+    
     // イベントの予約を行うメソッド
-    public function reserve(Request $request)
-    {
-        // 指定されたIDのイベントを取得
-        $event = Event::findOrFail($request->id);
+   public function reserve(Request $request)
+{
+    // 指定されたIDのイベントを取得
+    $event = Event::findOrFail($request->id);
 
-        // 予約された人数を取得
-        $reservedPeople = DB::table('reservations')
-            ->select('event_id', DB::raw('sum(number_of_people) as number_of_people'))
-            ->whereNull('canceled_date')
-            ->groupBy('event_id')
-            ->having('event_id', $event->id)
-            ->first();
+    // 予約された人数を取得
+    $reservedPeople = DB::table('reservations')
+        ->select('event_id', DB::raw('sum(number_of_people) as number_of_people'))
+        ->whereNull('canceled_date')
+        ->groupBy('event_id')
+        ->having('event_id', $event->id)
+        ->first();
 
-        // 予約可能な人数を確認して予約を作成するか判断
-        if (is_null($reservedPeople) || $event->max_people >= $reservedPeople->number_of_people + $request->reserved_people) {
-            Reservation::create([
-                'user_id' => Auth::id(),
-                'event_id' => $request['id'],
-                'number_of_people' => $request['reserved_people'],
-            ]);
+    // 予約可能な人数を確認して予約を作成するか判断
+    if (is_null($reservedPeople) || $event->max_people >= $reservedPeople->number_of_people + $request->reserved_people) {
+        // $remarks をリクエストから取得
+        $remarks = $request->input('remarks');
 
-            // フラッシュメッセージを表示し、ダッシュボードにリダイレクト
-            session()->flash('status', '登録完了');
-            return to_route('dashboard');
-        } else {
-            // 予約できない旨のメッセージを表示し、ダッシュボードを再表示
-            session()->flash('status', 'この人数は予約できません。');
-            return view('dashboard');
-        }
+        // 予約作成時に備考を含めて保存する例
+        Reservation::create([
+            'user_id' => Auth::id(),
+            'event_id' => $request->id,
+            'number_of_people' => $request->reserved_people,
+            'remarks' => $remarks, // 備考を保存する
+        ]);
+
+        // フラッシュメッセージを表示し、ダッシュボードにリダイレクト
+        session()->flash('status', '登録完了');
+        return redirect()->route('dashboard');
+    } else {
+        // 予約できない旨のメッセージを表示し、ダッシュボードを再表示
+        session()->flash('status', 'この人数は予約できません。');
+        return view('dashboard');
     }
+}
 }

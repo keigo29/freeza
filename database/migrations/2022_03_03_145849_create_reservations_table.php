@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreignId('event_id')->constrained()->onUpdate('cascade');
             $table->integer('number_of_people');
             $table->datetime('canceled_date')->nullable();
+            $table->text('remarks')->nullable()->default(null);
+            
             $table->timestamps();
         });
     }
